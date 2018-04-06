@@ -1,0 +1,86 @@
+group = 'sites.android.ltt.com.sites'
+version = getEnvValue("versionName", "1.0.0")
+def apVersion = getEnvValue("apVersion", "")
+
+apply plugin: "com.android.application"
+apply plugin: "com.taobao.atlas"
+apply plugin: "com.taobao.atlas.dexpatch"
+apply plugin: "maven-publish"
+
+android {
+    compileSdkVersion rootProject.ext.compileSdk
+    buildToolsVersion rootProject.ext.buildTools
+
+    defaultConfig {
+        applicationId "sites.android.ltt.com.sites"
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.targetSdk
+        versionCode 1
+        versionName version
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters "armeabi"
+        }
+    }
+    dataBinding {
+        enabled = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+}
+
+atlas {
+    atlasEnabled true
+    tBuildConfig {
+        autoStartBundles = ["com.ltt.android.sites.bundle.test"] //自启动bundle配置
+//        outOfApkBundles = ["remotebundle"]
+        preLaunch = "sites.android.ltt.com.sites.AppPreLaunch"
+        classInject false
+        dataBindingBundles = ["com.ltt.android.sites.bundle.test"]
+    }
+    manifestOptions {
+        addAtlasProxyComponents true
+    }
+    patchConfigs {
+        debug {
+            createTPatch true
+        }
+    }
+    buildTypes {
+        debug {
+            if (apVersion) {
+                baseApDependency "sites.android.ltt.com.sites:AP-debug:${apVersion}@ap"
+                patchConfig patchConfigs.debug
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile("com.taobao.android:atlas_core:$rootProject.ext.atlas_core") {
+        transitive true
+    }
+    compile "com.taobao.android:atlasupdate:$rootProject.ext.atlasupdate"
+    compile "com.android.support:appcompat-v7:$rootProject.ext.appcompat_v7"
+    compile "com.android.support:design:$rootProject.ext.design"
+    compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraint_layout"
+    compile 'com.alibaba:fastjson:1.1.45.android'
+    bundleCompile project(':test-bundle')
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact "${project.buildDir}/outputs/apk/${project.name}-debug.ap"
+            artifactId "AP-debug"
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}

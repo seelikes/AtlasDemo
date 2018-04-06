@@ -1,0 +1,48 @@
+apply plugin: "com.android.library"
+apply plugin: "com.taobao.atlas"
+
+group = 'com.ltt.android.sites'
+version = '1.0.1'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdk
+    buildToolsVersion rootProject.ext.buildTools
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.targetSdk
+        versionCode 101
+        versionName version
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+}
+
+atlas {
+    bundleConfig {
+        awbBundle true
+    }
+    buildTypes {
+        debug {
+            baseApFile project.rootProject.file('app/build/outputs/apk/app-debug.ap')
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ["*.jar"], dir: "libs")
+    providedCompile "com.android.support:appcompat-v7:$rootProject.ext.appcompat_v7"
+    providedCompile("com.taobao.android:atlas_core:$rootProject.ext.atlas_core") {
+        transitive true
+    }
+}
