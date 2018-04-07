@@ -1,2 +1,4 @@
-include ':app', ':test-bundle'
+include ':app'
 include ':activitygroupcompat'
+include ':test-bundle'
+include ':test-remote-bundle'

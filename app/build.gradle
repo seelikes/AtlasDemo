@@ -37,10 +37,10 @@ atlas {
     atlasEnabled true
     tBuildConfig {
 //        autoStartBundles = ["com.ltt.android.sites.bundle.test"] //自启动bundle配置
-//        outOfApkBundles = ["remotebundle"]
+        outOfApkBundles = ["sites.android.ltt.com.sites.test.remote.bundle"]
         preLaunch = "sites.android.ltt.com.sites.AppPreLaunch"
         classInject false
-        dataBindingBundles = ["com.ltt.android.sites.bundle.test"]
+        dataBindingBundles = ["com.ltt.android.sites.bundle.test", "sites.android.ltt.com.sites.test.remote.bundle"]
     }
     manifestOptions {
         addAtlasProxyComponents true
@@ -71,6 +71,7 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraint_layout"
     compile 'com.alibaba:fastjson:1.1.45.android'
     bundleCompile project(':test-bundle')
+    bundleCompile project(':test-remote-bundle')
     compile project(':activitygroupcompat')
 }
 

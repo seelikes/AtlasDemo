@@ -1,0 +1,7 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="sites.android.ltt.com.sites.test.remote.bundle" >
+
+    <application>
+        <activity android:name=".TestRemoteBundleActivity" />
+    </application>
+</manifest>

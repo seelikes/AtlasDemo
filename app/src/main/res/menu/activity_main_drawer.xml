@@ -32,6 +32,10 @@
             android:id="@+id/nav_test_bundle"
             android:icon="@drawable/ic_menu_manage"
             android:title="TestBundle" />
+        <item
+            android:id="@+id/nav_test_remote_bundle"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="TestRemoteBundle" />
     </group>
 
     <item android:title="Communicate">

@@ -6,15 +6,21 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.taobao.atlas.bundleInfo.AtlasBundleInfoManager;
 import android.taobao.atlas.framework.Atlas;
+import android.taobao.atlas.framework.BundleInstaller;
 import android.taobao.atlas.runtime.ActivityTaskMgr;
 import android.taobao.atlas.runtime.ClassNotFoundInterceptorCallback;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.taobao.schedulers.AndroidSchedulers;
+
 import org.osgi.framework.BundleException;
 
 import java.io.File;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
 
 public class MainApplication extends Application {
     @Override
@@ -25,12 +31,12 @@ public class MainApplication extends Application {
 
         Atlas.getInstance().setClassNotFoundInterceptorCallback(new ClassNotFoundInterceptorCallback() {
             @Override
-            public Intent returnIntent(Intent intent) {
+            public Intent returnIntent(final Intent intent) {
                 final String className = intent.getComponent().getClassName();
                 final String bundleName = AtlasBundleInfoManager.instance().getBundleForComponet(className);
 
-                Log.i(MainApplication.class.getSimpleName(), "onCreate.UL1212LP.DI1211, className: " + className);
-                Log.i(MainApplication.class.getSimpleName(), "onCreate.UL1212LP.DI1211, bundleName: " + bundleName);
+                Log.i(MainApplication.class.getSimpleName(), "onCreate.returnIntent.UL1212LP.DI1211, className: " + className);
+                Log.i(MainApplication.class.getSimpleName(), "onCreate.returnIntent.UL1212LP.DI1211, bundleName: " + bundleName);
 
                 if (!TextUtils.isEmpty(bundleName) && !AtlasBundleInfoManager.instance().isInternalBundle(bundleName)) {
                     //远程bundle
@@ -43,6 +49,7 @@ public class MainApplication extends Application {
                     }
                     else {
                         Toast.makeText(activity, " 远程bundle不存在，请确定 : " + remoteBundleFile.getAbsolutePath() , Toast.LENGTH_LONG).show();
+                        Log.i(MainApplication.class.getSimpleName(), "onCreate.returnIntent.UL1212LP.DI1211, remoteBundleFile not exist");
                         return intent;
                     }
 
@@ -52,9 +59,26 @@ public class MainApplication extends Application {
                     }
                     catch (BundleException e) {
                         Toast.makeText(activity, " 远程bundle 安装失败，" + e.getMessage() , Toast.LENGTH_LONG).show();
+                        Log.i(MainApplication.class.getSimpleName(), "onCreate.returnIntent.UL1212LP.DI1211, BundleException: " + e.getMessage());
                         e.printStackTrace();
+                        return intent;
                     }
-                    activity.startActivities(new Intent[]{intent});
+                    Log.i(MainApplication.class.getSimpleName(), "onCreate.returnIntent.UL1212LP.DI1211, activity will be launched next line");
+                    ActivityTaskMgr.getInstance().peekTopActivity().startActivities(new Intent[]{intent});
+//                    Atlas.getInstance().installBundleTransitivelyAsync(new String[]{path}, new BundleInstaller.InstallListener() {
+//                        @Override
+//                        public void onFinished() {
+//                            Observable.just(MainApplication.class)
+//                                    .observeOn(AndroidSchedulers.mainThread())
+//                                    .subscribe(new Consumer<Class<MainApplication>>() {
+//                                        @Override
+//                                        public void accept(Class<MainApplication> mainApplicationClass) throws Exception {
+//                                            Log.i(MainApplication.class.getSimpleName(), "onCreate.returnIntent.UL1212LP.DI1211, activity will be launched next line");
+//                                            ActivityTaskMgr.getInstance().peekTopActivity().startActivities(new Intent[]{intent});
+//                                        }
+//                                    });
+//                        }
+//                    });
                 }
 
                 return intent;

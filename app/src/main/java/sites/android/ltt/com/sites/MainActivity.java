@@ -122,6 +122,11 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_test_bundle) {
             switchToActivity(findViewById(R.id.container), "test-bundle", "com.ltt.android.sites.bundle.test.TestBundleActivity");
         }
+        else if (id == R.id.nav_test_remote_bundle) {
+            Intent intent = new Intent();
+            intent.setClassName(this, "sites.android.ltt.com.sites.test.remote.bundle.TestRemoteBundleActivity");
+            startActivity(intent);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
