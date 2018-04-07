@@ -36,7 +36,7 @@ android {
 atlas {
     atlasEnabled true
     tBuildConfig {
-        autoStartBundles = ["com.ltt.android.sites.bundle.test"] //自启动bundle配置
+//        autoStartBundles = ["com.ltt.android.sites.bundle.test"] //自启动bundle配置
 //        outOfApkBundles = ["remotebundle"]
         preLaunch = "sites.android.ltt.com.sites.AppPreLaunch"
         classInject false
@@ -71,6 +71,7 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraint_layout"
     compile 'com.alibaba:fastjson:1.1.45.android'
     bundleCompile project(':test-bundle')
+    compile project(':activitygroupcompat')
 }
 
 publishing {
